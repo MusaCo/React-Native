@@ -24,9 +24,10 @@ export default function Register() {
         setaccesstoken(json.accesstoken);
       })
       .catch((error) => console.log(error));
-    console.log(accesstoken ? true : false);
+
     if (accesstoken) {
-      await SecureStore.setItemAsync("accesstoken", accesstoken);
+      localStorage.setItem("accesstoken", accesstoken);
+      //await SecureStore.setItemAsync("accesstoken", accesstoken);
     }
   };
   console.log(accesstoken);

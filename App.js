@@ -6,16 +6,22 @@ import { createStackNavigator } from "@react-navigation/stack";
 import LandingScreen from "./components/auth/Landing";
 import Register from "./components/auth/Register";
 import * as SecureStore from "expo-secure-store";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import rootReducer from "./redux/reducers";
+import thunk from "redux-thunk";
+import MainScreen from "./components/Main";
 
 export default function App() {
+  const store = createStore(rootReducer, applyMiddleware(thunk));
   const [Loggedin, setLoggedin] = useState(false);
   const Stack = createStackNavigator();
   let l = null;
   useEffect(() => {
     const log = async () => {
-      l = await SecureStore.getItemAsync("accesstoken");
+      l = localStorage.getItem("accesstoken"); //await SecureStore.getItemAsync("accesstoken");
       if (l) {
-        alert(l);
+        //alert(l);
         setLoggedin(true);
       }
     };
@@ -37,7 +43,12 @@ export default function App() {
     );
   }
   if (Loggedin) {
-    return <Text> yooo </Text>;
+    console.log(store.getState());
+    return (
+      <Provider store={store}>
+        <MainScreen />
+      </Provider>
+    );
   }
 }
 
