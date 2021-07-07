@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { View, Button, TextInput } from "react-native";
 import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
 
-export default function Register() {
+export default function Register(props) {
   const [email, setemail] = useState(null);
   const [password, setpassword] = useState(null);
   const [accesstoken, setaccesstoken] = useState(null);
-
   const onSignUp = async () => {
     fetch("https://musasocialapi.herokuapp.com/auth/login", {
       method: "POST",
@@ -25,12 +25,20 @@ export default function Register() {
       })
       .catch((error) => console.log(error));
 
-    if (accesstoken) {
-      localStorage.setItem("accesstoken", accesstoken);
-      //await SecureStore.setItemAsync("accesstoken", accesstoken);
+    if (accesstoken !== undefined && accesstoken !== null) {
+      if (Platform.OS === "web") {
+        localStorage.setItem("accesstoken", accesstoken);
+        props.navigation.navigate("Main");
+      } else if (Platform.OS === "android") {
+        console.log(accesstoken);
+        await SecureStore.setItemAsync("accesstoken", accesstoken);
+        const at = await SecureStore.getItemAsync("accesstoken");
+        // console.log("this is attttttttttttt");
+        // console.log(at);
+        props.navigation.navigate("Main");
+      }
     }
   };
-  console.log(accesstoken);
   return (
     <View>
       <TextInput

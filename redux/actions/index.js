@@ -1,22 +1,59 @@
-import * as SecureStore from "expo-secure-store";
 import { USER_STATE_CHANGE } from "../constants/index";
+import { Platform } from "react-native";
 
-export const fetchuser = () => {
-  const accessToken = localStorage.getItem("accesstoken");
-  return (dispatch) => {
-    fetch("https://musasocialapi.herokuapp.com/auth/login", {
-      method: "GET",
-      headers: {
-        authorization: "Bearer " + accessToken,
-      },
-    })
-      .then((result) => result.json())
-      .then((data) => {
-        if (accessToken) {
-          dispatch({ type: USER_STATE_CHANGE, currentUser: data.message.user });
-        }
-      });
-  };
+let accessToken = null;
+
+export const fetchuser = (AT = "") => {
+  if (AT !== "") {
+    return (dispatch) => {
+      fetch("https://musasocialapi.herokuapp.com/auth/login", {
+        method: "GET",
+        headers: {
+          authorization: "Bearer " + AT,
+        },
+      })
+        .then((result) => result.json())
+        .then((data) => {
+          if (data) {
+            dispatch({
+              type: USER_STATE_CHANGE,
+              currentUser: data.message.user,
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("error");
+          console.log(error);
+          alert(error);
+        });
+    };
+  } else {
+    if (Platform.OS === "web") {
+      accessToken = localStorage.getItem("accesstoken");
+    }
+    return (dispatch) => {
+      fetch("https://musasocialapi.herokuapp.com/auth/login", {
+        method: "GET",
+        headers: {
+          authorization: "Bearer " + accessToken,
+        },
+      })
+        .then((result) => result.json())
+        .then((data) => {
+          if (data) {
+            dispatch({
+              type: USER_STATE_CHANGE,
+              currentUser: data.message.user,
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("error");
+          console.log(error);
+          alert(error);
+        });
+    };
+  }
 };
 
 // export function fetchUser() {
