@@ -6,10 +6,10 @@ import {
   StyleSheet,
   Image,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
-import { fetchuser } from "../../redux/actions";
 
-export default function Search() {
+export default function Search(props) {
   const ref = useRef(" ");
   const [users, setusers] = useState(null);
   const fetchUser = (search) => {
@@ -17,7 +17,7 @@ export default function Search() {
       .then((result) => result.json())
       .then((data) => setusers(data));
   };
-  console.log(ref.current.value);
+  //console.log(ref.current.value);
   return (
     <View>
       <TextInput
@@ -31,7 +31,15 @@ export default function Search() {
         numColumns={1}
         horizontal={false}
         data={users}
-        renderItem={({ item }) => <Text>{item.username}</Text>}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() =>
+              props.navigation.navigate("Profile", { username: item.username })
+            }
+          >
+            <Text>{item.username}</Text>
+          </TouchableOpacity>
+        )}
       />
     </View>
   );

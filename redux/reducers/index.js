@@ -11,6 +11,15 @@ const user = (state = initialState, action) => {
       ...state,
       currentUser: action.currentUser,
     };
+  } else if (action.type == "FOLLOW") {
+    console.log(action.id);
+    return {
+      ...state,
+      currentUser: {
+        ...state.currentUser,
+        followings: [...state.currentUser.followings, action.id],
+      },
+    };
   } else {
     return state;
   }

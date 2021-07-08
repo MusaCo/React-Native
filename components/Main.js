@@ -110,4 +110,5 @@ function mapStateToProps(state) {
 
 const mapDispatchProps = (dispatch) =>
   bindActionCreators({ fetchuser: (AT) => fetchuser(AT) }, dispatch); //datwanyn awhash bkain
+
 export default connect(mapStateToProps, mapDispatchProps)(Main);

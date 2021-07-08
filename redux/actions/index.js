@@ -1,4 +1,4 @@
-import { USER_STATE_CHANGE } from "../constants/index";
+import { FOLLOW, UNFOLLOW, USER_STATE_CHANGE } from "../constants/index";
 import { Platform } from "react-native";
 
 let accessToken = null;
@@ -28,9 +28,10 @@ export const fetchuser = (AT = "") => {
         });
     };
   } else {
-    if (Platform.OS === "web") {
-      accessToken = localStorage.getItem("accesstoken");
-    }
+    // if (Platform.OS === "web") {
+    //   accessToken = localStorage.getItem("accesstoken");
+    // }
+    accessToken = localStorage.getItem("accesstoken");
     return (dispatch) => {
       fetch("https://musasocialapi.herokuapp.com/auth/login", {
         method: "GET",
@@ -54,6 +55,23 @@ export const fetchuser = (AT = "") => {
         });
     };
   }
+};
+export const follow = (id) => {
+  return (dispatch) => {
+    dispatch({
+      type: FOLLOW,
+      id: id,
+    });
+  };
+};
+
+export const unfollow = (id) => {
+  return (dispatch) => {
+    dispatch({
+      type: UNFOLLOW,
+      id: id,
+    });
+  };
 };
 
 // export function fetchUser() {
